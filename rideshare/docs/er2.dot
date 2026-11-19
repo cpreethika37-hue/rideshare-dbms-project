@@ -1,0 +1,19 @@
+digraph ER {
+  rankdir=TB; nodesep=0.5; ranksep=0.6; newrank=true; bgcolor="white";
+  node [shape=plain, fontname="Helvetica", fontsize=13];
+  edge [fontname="Helvetica", fontsize=11, color="#555555", arrowhead=crowodot, arrowtail=tee, dir=both];
+  zone [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>zone</B></FONT></TD></TR><TR><TD ALIGN="LEFT"><U>zone_id</U> PK<BR ALIGN="LEFT"/>zone_name UQ<BR ALIGN="LEFT"/>city<BR ALIGN="LEFT"/>centre_lat, centre_lng<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  fare_rate [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>fare_rate</B></FONT></TD></TR><TR><TD ALIGN="LEFT"><U>vehicle_type</U> PK<BR ALIGN="LEFT"/>base_fare, per_km<BR ALIGN="LEFT"/>per_min, min_fare<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  rider [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>rider</B></FONT></TD></TR><TR><TD ALIGN="LEFT"><U>rider_id</U> PK<BR ALIGN="LEFT"/>full_name, phone UQ, email UQ<BR ALIGN="LEFT"/>home_zone FK, joined_on<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  driver [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>driver</B></FONT></TD></TR><TR><TD ALIGN="LEFT"><U>driver_id</U> PK<BR ALIGN="LEFT"/>full_name, phone UQ<BR ALIGN="LEFT"/>licence_no UQ, is_active<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  vehicle [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>vehicle</B></FONT></TD></TR><TR><TD ALIGN="LEFT"><U>vehicle_id</U> PK<BR ALIGN="LEFT"/>driver_id FK, reg_no UQ<BR ALIGN="LEFT"/>model, seats<BR ALIGN="LEFT"/>vehicle_type FK<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  trip [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#E3A857"><B>trip</B></TD></TR><TR><TD ALIGN="LEFT"><U>trip_id</U> PK<BR ALIGN="LEFT"/>rider_id FK, driver_id FK<BR ALIGN="LEFT"/>vehicle_id FK<BR ALIGN="LEFT"/>pickup_zone FK, drop_zone FK<BR ALIGN="LEFT"/>requested/accepted/started/ended_at<BR ALIGN="LEFT"/>status, distance_km<BR ALIGN="LEFT"/>cancelled_by, rider_rating<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  fare [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>fare</B> (trigger-filled)</FONT></TD></TR><TR><TD ALIGN="LEFT"><U>trip_id</U> PK, FK<BR ALIGN="LEFT"/>base / distance / time amount<BR ALIGN="LEFT"/>surge_mult, total_amount<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  payment [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="3"><TR><TD BGCOLOR="#0F6E6E"><FONT COLOR="white"><B>payment</B></FONT></TD></TR><TR><TD ALIGN="LEFT"><U>payment_id</U> PK<BR ALIGN="LEFT"/>trip_id FK UQ<BR ALIGN="LEFT"/>method, amount<BR ALIGN="LEFT"/>status, paid_at<BR ALIGN="LEFT"/></TD></TR></TABLE>>];
+  {rank=same; zone; rider; driver; fare_rate}
+  {rank=same; vehicle; trip}
+  {rank=same; fare; payment}
+  rider -> trip [label="requests"]; driver -> vehicle [label="owns"]; driver -> trip [label="serves"]; vehicle -> trip [label="used in"];
+  zone -> trip [label="pickup / drop"]; zone -> rider [label="home"]; fare_rate -> vehicle [label="priced by"];
+  trip -> fare [label="priced as", arrowhead=tee]; fare -> payment [label="paid by", arrowhead=tee];
+}

@@ -1,0 +1,47 @@
+
+== find_one (first 2 GPS points)
+   {"trip_id": 1, "driver_id": 32, "rider_id": 157, "pickup_zone": "Electronic City", "drop_zone": "HSR Layout", "started_at": "2026-09-01 00:24:16", "ended_at": "2026-09-01 00:39:21", "points": [{"ts": "2026-09-01 00:24:16", "loc": {"type": "Point", "coordinates": [77.65465, 12.850494]}, "speed_kmph": 35.8}, {"ts": "2026-09-01 00:25:16", "loc": {"type": "Point", "coordinates": [77.653949, 12.856014] ...
+
+== CRUD on trip 900001
+   inserted -> {'trip_id': 900001, 'status': 'COMPLETED'}
+   update matched=1, GPS points now 3
+
+== delete_one
+   deleted=1; remaining=5276
+
+== trips per pickup zone and time band (first 8 rows)
+   ('Electronic City', '1 Morning (6-9)', 85)
+   ('Electronic City', '2 Midday (10-16)', 156)
+   ('Electronic City', '3 Evening (17-20)', 237)
+   ('Electronic City', '4 Night (21-5)', 83)
+   ('HSR Layout', '1 Morning (6-9)', 176)
+   ('HSR Layout', '2 Midday (10-16)', 228)
+   ('HSR Layout', '3 Evening (17-20)', 150)
+   ('HSR Layout', '4 Night (21-5)', 95)
+
+== busiest pickup zone per time band
+   ('1 Morning (6-9)', 'HSR Layout', 176)
+   ('2 Midday (10-16)', 'Koramangala', 304)
+   ('3 Evening (17-20)', 'MG Road', 342)
+   ('4 Night (21-5)', 'Koramangala', 155)
+
+== GPS-estimated distance per trip (first 5)
+   (1, 'Electronic City -> HSR Layout', 8.02)
+   (2, 'Indiranagar -> Jayanagar', 9.53)
+   (3, 'Electronic City -> Koramangala', 10.87)
+   (4, 'Hebbal -> Koramangala', 12.52)
+   (5, 'Whitefield -> Indiranagar', 13.97)
+
+== average GPS-estimated trip distance
+   11.09 km over 5276 trips
+
+== SQL billed km vs MongoDB GPS km
+   5276 trips: mean billed/GPS ratio = 1.210; mean GPS 11.09 km, mean billed 13.22 km
+
+== slowest pickup-zone / period combinations (avg km/h)
+   ('Whitefield', 'evening', 20.1)
+   ('HSR Layout', 'evening', 20.2)
+   ('Koramangala', 'evening', 20.3)
+   ('Hebbal', 'evening', 20.4)
+
+(engine: mongomock (in-memory))
